@@ -29,3 +29,4 @@ This is a project for learning CLIP
 - [x] Initialize README
 - [x] Start organizing CLIP overview
 - [] Reading the CLIP paper
+- [] Reading code
