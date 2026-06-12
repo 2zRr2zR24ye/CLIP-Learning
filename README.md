@@ -27,4 +27,5 @@ This is a project for learning CLIP
 ## Current progress
 - [x] Create GitHub repository
 - [x] Initialize README
-- [] Start organizing CLIP overview
+- [x] Start organizing CLIP overview
+- [] Reading the CLIP paper

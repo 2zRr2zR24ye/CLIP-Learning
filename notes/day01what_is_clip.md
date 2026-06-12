@@ -18,7 +18,7 @@
 ## Embedding
 模型能够理解自然语言、生成创意内容，甚至进行复杂的推理决策，其背后就是一项核心技术——Embedding（也可以说成是嵌入）。它扮演着“神经中枢”的角色，像一座桥梁，将人类世界的离散符号（如文字、图像）转化为机器能够理解的连续向量，使大模型得以“思考”和“创作”。
 
-![Embedding]("F:\github-projects\CLIP-Learning\notes\Figure\Embedding.png")
+![Embedding](Figure\Embedding.png)
 
 - 简单来说，Embedding就相当于模型自己的语言，任何需要跟大模型沟通的文字、图像、视频都需要转换为大模型所能理解的语言：Embedding，它才能处理。处理完成后，它再翻译成人类能理解的文字、图像等。这也是大模型最强大的核心能力之一，多模态处理能力。
 
@@ -32,7 +32,7 @@
 
 ## Multimodal representation
 
-![Multimodal representation]("F:\github-projects\CLIP-Learning\notes\Figure\multimodal representation.png")
+![Multimodal representation](Figure\multimodal_representation.png)
 
 - Joint Representation: 多模态联合表示是一种将多个模态（如文本、图像、声音等）的信息共同映射到一个统一的多模态向量空间中的表示方法。多模态联合表示通过神经网络、概率图模型将来自不同模态的数据进行融合，生成一个包含多个模态信息的统一表示。这个表示不仅保留了每个模态的关键信息，还能够在不同模态之间建立联系，从而支持跨模态的任务，如多模态情感分析、视听语音识别等。
 
@@ -108,3 +108,5 @@ yellow 对应哪里
 若向量分量非负，则范围在 [0,1] 之间。
 
 - /code/cosine_similarity_demo.py是一个计算余弦相似度demo
+
+**见下一章day01clip_paper_read.dm**
