@@ -307,3 +307,90 @@ def forward(self, image, text):
 ```
 
 你现在已经完整通读了 CLIP 的整个实现骨架。从 `simple_tokenizer` 把文本变成 ID，到 `ModifiedResNet` 和 `Transformer` 提取特征，再到最后的对比学习损失——**你已经具备了手撕多模态模型底层原理的能力**。
+
+
+## conver_weights & build_model
+```python
+
+def convert_weights(model: nn.Module):
+    """Convert applicable model parameters to fp16"""
+
+    def _convert_weights_to_fp16(l):
+        if isinstance(l, (nn.Conv1d, nn.Conv2d, nn.Linear)):
+            l.weight.data = l.weight.data.half()
+            if l.bias is not None:
+                l.bias.data = l.bias.data.half()
+
+        if isinstance(l, nn.MultiheadAttention):
+            for attr in [*[f"{s}_proj_weight" for s in ["in", "q", "k", "v"]], "in_proj_bias", "bias_k", "bias_v"]:
+                tensor = getattr(l, attr)
+                if tensor is not None:
+                    tensor.data = tensor.data.half()
+
+        for name in ["text_projection", "proj"]:
+            if hasattr(l, name):
+                attr = getattr(l, name)
+                if attr is not None:
+                    attr.data = attr.data.half()
+
+    model.apply(_convert_weights_to_fp16)
+
+
+def build_model(state_dict: dict):
+    vit = "visual.proj" in state_dict
+
+    if vit:
+        vision_width = state_dict["visual.conv1.weight"].shape[0]
+        vision_layers = len([k for k in state_dict.keys() if k.startswith("visual.") and k.endswith(".attn.in_proj_weight")])
+        vision_patch_size = state_dict["visual.conv1.weight"].shape[-1]
+        grid_size = round((state_dict["visual.positional_embedding"].shape[0] - 1) ** 0.5)
+        image_resolution = vision_patch_size * grid_size
+    else:
+        counts: list = [len(set(k.split(".")[2] for k in state_dict if k.startswith(f"visual.layer{b}"))) for b in [1, 2, 3, 4]]
+        vision_layers = tuple(counts)
+        vision_width = state_dict["visual.layer1.0.conv1.weight"].shape[0]
+        output_width = round((state_dict["visual.attnpool.positional_embedding"].shape[0] - 1) ** 0.5)
+        vision_patch_size = None
+        assert output_width ** 2 + 1 == state_dict["visual.attnpool.positional_embedding"].shape[0]
+        image_resolution = output_width * 32
+
+    embed_dim = state_dict["text_projection"].shape[1]
+    context_length = state_dict["positional_embedding"].shape[0]
+    vocab_size = state_dict["token_embedding.weight"].shape[0]
+    transformer_width = state_dict["ln_final.weight"].shape[0]
+    transformer_heads = transformer_width // 64
+    transformer_layers = len(set(k.split(".")[2] for k in state_dict if k.startswith("transformer.resblocks")))
+
+    model = CLIP(
+        embed_dim,
+        image_resolution, vision_layers, vision_width, vision_patch_size,
+        context_length, vocab_size, transformer_width, transformer_heads, transformer_layers
+    )
+
+    for key in ["input_resolution", "context_length", "vocab_size"]:
+        if key in state_dict:
+            del state_dict[key]
+
+    convert_weights(model)
+    model.load_state_dict(state_dict)
+    return model.eval()
+```
+  convert_weights  — 精度转换
+
+  遍历模型所有参数，将 Conv、Linear、MultiheadAttention 等层的权重转为 fp16，用于推理加速和显存节省。
+
+
+  build_model  — 从 checkpoint 重建模型
+
+  自动从 state_dict 推断架构参数：
+
+  - 检测 visual.proj 是否存在 → 判断是 ViT 还是 ResNet
+  - 从权重的 shape 反推：embed_dim、vision_width、vision_layers、context_length 等
+  - 构建模型、转换 fp16、加载权重、设为 eval 模式
+  # 计算余弦相似度矩阵
+  logits = logit_scale * image_features @ text_features.T
+
+  # 返回 (图像→文本, 文本→图像) 两个方向的 logits
+  # 用于双向对比损失
+
+  这实现了 CLIP 的核心思想：通过对比学习，让匹配的图文对在联合空间中距离更近，不匹配的拉远。
