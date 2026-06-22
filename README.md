@@ -10,12 +10,12 @@ This is a project for learning CLIP
 - Deepen understanding through experiments
 
 ## Learning Path
-- [] Understand the overall structure of CLIP
-- [] Read the original CLIP paper
-- [] Understand image encoder
-- [] Understand text encoder
-- [] Understanding Contrastive Loss
-- [] Learning zero shot classification
+- [x] Understand the overall structure of CLIP
+- [x] Read the original CLIP paper
+- [x] Understand image encoder
+- [x] Understand text encoder
+- [x] Understanding Contrastive Loss
+- [x] Learning zero shot classification
 - [] Run a CLIP demo successfully
 
 ## Architecture of the project
@@ -28,5 +28,5 @@ This is a project for learning CLIP
 - [x] Create GitHub repository
 - [x] Initialize README
 - [x] Start organizing CLIP overview
-- [] Reading the CLIP paper
-- [] Reading code
+- [x] Reading the CLIP paper
+- [x] Reading code
