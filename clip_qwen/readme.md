@@ -44,24 +44,24 @@ python inference.py
 ...
 ```
 
-## 2."<image>"的生命周期
-- 在数据集中，利用./scripts/convert_llava_2_jsonl.py去除了原始数据集中的"<image>",在./data/datasets.py中加载数据集时：
+## 2.\<image\>的生命周期
+- 在数据集中，利用./scripts/convert_llava_2_jsonl.py去除了原始数据集中的\<image\>,在./data/datasets.py中加载数据集时：
 ```python
         conversation = [
             {"role": "user", "content": f"{self.image_token}\n请描述这张图片。"},
             {"role": "assistant", "content": caption}
         ]
 ```
-可以看到，"<image>"作为一个占位符被硬解码添加到了输入数据的开头。
+可以看到，\<image\>作为一个占位符被硬解码添加到了输入数据的开头。
 
-- 分词阶段。代码将"<image>"变成了数字ID，在train.py中：
+- 分词阶段。代码将\<image\>变成了数字ID，在train.py中：
 ```python
 if '<|image|>' not in llm_tokenizer.get_vocab():
     num_added = llm_tokenizer.add_special_tokens({'additional_special_tokens': ['<|image|>']})
     print(f"add {num_added} special token: <|image|>")
     model.llm.resize_token_embeddings(len(llm_tokenizer))
 ```
-手动将"<image>"加入qwen的词汇表，分配了唯一的数字ID。这样一来，"<image>"在分词过程中不会被分割开，而是作为一个独立的数字（不再是一串字符）
+手动将\<image\>加入qwen的词汇表，分配了唯一的数字ID。这样一来，\<image\>在分词过程中不会被分割开，而是作为一个独立的数字（不再是一串字符）
 
 - 模型前向传播阶段。./clip_qwen/model.py:
 ```python
