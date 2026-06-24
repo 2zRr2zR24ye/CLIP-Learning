@@ -1,6 +1,8 @@
 # CLIP-Learning
 This is a project for learning CLIP
 
+# *clip_qwen*
+This project implements a **parameter-efficient vision-language model (VLM)**. The main idea is to **keep the powerful pre-trained backbone networks (CLIP and Qwen) frozen, and only train a lightweight 'translator' (Projector) to map image features into the language model's embedding space, enabling the ability to 'talk about pictures'.**
 
 ## Project Objective
 - Understand the core idea of CLIP
@@ -16,13 +18,12 @@ This is a project for learning CLIP
 - [x] Understand text encoder
 - [x] Understanding Contrastive Loss
 - [x] Learning zero shot classification
-- [] Run a CLIP demo successfully
+- [x] Run a CLIP demo successfully
+- [x] Bulid a VLM
 
 ## Architecture of the project
 - Notes/: Learning Notes
 - Papers/: reading records of papers
-- experiments/: experimental code
-- Assets/: images and materials
 
 ## Current progress
 - [x] Create GitHub repository
