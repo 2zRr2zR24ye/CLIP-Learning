@@ -1,0 +1,20 @@
+# 数据集
+data_root: "/root/autodl-tmp/my_coop/data"
+dataset_name: "cifar10"  # 或者自定义
+
+# 模型
+clip_model_name: "openai/clip-vit-base-patch32"  # 或 "RN50"
+n_ctx: 4  # 可学习上下文向量的数量
+ctx_init: "a photo of a"  # 可选：用已有词向量初始化
+
+# 训练
+batch_size: 32
+epochs: 50
+lr: 0.002
+weight_decay: 0.0
+
+# 其他
+seed: 42
+device: "cuda"
+output_dir: "./outputs"
+shots: 16
