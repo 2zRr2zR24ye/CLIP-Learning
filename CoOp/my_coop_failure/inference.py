@@ -9,9 +9,9 @@ import torch
 from PIL import Image
 from torch.utils.data import DataLoader
 
-from model import CLIP, promptlearner
-from datasets import ClassificationDataset
-from utils import load_config, load_checkpoint
+from CoOp.my_coop_failure.model import CLIP, promptlearner
+from CoOp.my_coop_failure.datasets import ClassificationDataset
+from CoOp.my_coop_failure.utils import load_config, load_checkpoint
 
 
 def inference_single_image(clip_model, prompt_learner, image_path, class_names, device, topk=5):

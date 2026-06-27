@@ -7,9 +7,9 @@ import torch
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import CosineAnnealingLR
 
-from model import CLIP, promptlearner
-from datasets import ClassificationDataset
-from utils import set_seed, load_config, save_checkpoint, accuracy
+from CoOp.my_coop_failure.model import CLIP, promptlearner
+from CoOp.my_coop_failure.datasets import ClassificationDataset
+from CoOp.my_coop_failure.utils import set_seed, load_config, save_checkpoint, accuracy
 
 
 def main():
