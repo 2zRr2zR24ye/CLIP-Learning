@@ -19,7 +19,7 @@
   ---
 
   ## 项目结构
-
+```bash
   my_coop/
   ├
   │
@@ -38,7 +38,7 @@
   ├── outputs/                       # 存放 checkpoint 和日志
   ├── requirements.txt
   └── README.md
-
+```
   ---
 
   ## 安装
